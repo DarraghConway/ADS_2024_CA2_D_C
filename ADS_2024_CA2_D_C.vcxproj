@@ -129,7 +129,7 @@
   <ItemGroup>
     <ClInclude Include="BinaryTree.h" />
     <ClInclude Include="BSTNode.h" />
-    <ClInclude Include="Map.h" />
+    <ClInclude Include="TreeMap.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

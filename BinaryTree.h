@@ -16,6 +16,7 @@ public:
 	void clear();
 	int count();
 	T& get(T& item);
+	T& getByKey(T& item);
 
 	void printInOrder();
 	void printInOrder(BSTNode<T>* node);
@@ -164,8 +165,33 @@ T& BinaryTree<T>::get(T& item)
 		else
 			current = current->getRight();
 	}
-	throw logic_error("ITem not found");
+	throw logic_error("Item not found");
 }
+template <class T>
+T& BinaryTree<T>::getByKey(T& item)
+{
+	BSTNode<T>* current = root;
+	while (current != nullptr)
+	{
+	
+		if (current->getItem().first == item.first)
+		{
+			return current->getItem();
+		}
+		else if (current->getItem().first > item.first)
+		{
+			current = current->getLeft();
+		}
+		else
+		{
+			current = current->getRight();
+		}
+	}
+
+	
+	throw logic_error("Key not found");
+}
+
 template <class T>
 void BinaryTree<T>::addItemToArray(BSTNode<T>* node, int& pos, T* arr)
 {
@@ -185,7 +211,7 @@ T* BinaryTree<T>::toArray()
 	T* arr = new T[root->count()];
 	int pos = 0;
 	addItemToArray(root, pos, arr);
-	return arr;
+	return arr;	
 }
 
 template <class T>
