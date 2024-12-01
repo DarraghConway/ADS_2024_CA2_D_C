@@ -1,22 +1,43 @@
 #include "TreeMap.h"
 #include <iostream>
 #include <fstream>
+#include <sstream>
+#include <vector>
+#include <string>
 
 using namespace std;
+
+struct Student {
+    int StudentID;
+    string Name;
+    int Age;
+    double GPA;
+    string Graduated;
+};
+
 
 void testStageOneFunctions();
 void testPrintInOrder();
 void processFile(const string& filename, TreeMap<char, BinaryTree<string>>& wordMap);
 void displayMenu(TreeMap<char, BinaryTree<string>>& wordMap);
+vector<string> splitLine(const string& line, char delimiter = ',');
+vector<Student> loadCSV(const string& filename);
+void printData(const vector<Student>& data);
+void app();
+
 
 int main() {
     //Run Stage 1:
-    /*testStageOneFunctions();*/
+   /* testStageOneFunctions();*/
 
     //Run Stage 2:
-    TreeMap<char, BinaryTree<string>> map;
+    /*TreeMap<char, BinaryTree<string>> map;
     processFile("./word.txt", map);
-    displayMenu(map);
+    displayMenu(map);*/
+
+	//Run Stage 4 (Only Prints CSV data):
+    app();
+
 
     return 0;
 }
@@ -160,3 +181,197 @@ void displayMenu(TreeMap<char, BinaryTree<string>>& wordMap) {
         }
     } while (choice != 3);
 }
+
+
+
+
+vector<string> splitLine(const string& line, char delimiter ) {
+    vector<string> fields;
+    stringstream ss(line);
+    string field;
+
+    while (getline(ss, field, delimiter)) {
+        fields.push_back(field);
+    }
+    return fields;
+}
+
+vector<Student> loadCSV(const string& filename) {
+    vector<Student> data;
+    ifstream file(filename);
+    if (!file.is_open()) {
+        throw runtime_error("Could not open file.");
+    }
+
+    string line;
+
+    getline(file, line);
+
+    while (getline(file, line)) {
+        vector<string> fields = splitLine(line);
+        if (fields.size() == 5) {
+            Student student;
+            student.StudentID = stoi(fields[0]);
+            student.Name = fields[1];
+            student.Age = stoi(fields[2]);
+            student.GPA = stod(fields[3]);
+            student.Graduated = fields[4];
+            data.push_back(student);
+        }
+    }
+
+    file.close();
+    return data;
+}
+
+void printData(const vector<Student>& data) {
+    cout << "StudentID\tName\t\tAge\tGPA\tGraduated\n";
+    cout << "---------------------------------------------------\n";
+    for (const auto& student : data) {
+        cout << student.StudentID << "\t\t"
+            << student.Name << "\t\t"
+            << student.Age << "\t"
+            << student.GPA << "\t"
+            << student.Graduated << "\n";
+    }
+}
+
+void app() try {
+    vector<Student> students = loadCSV("./Student_Grades.csv");
+
+    printData(students);
+}
+catch (const exception& e) {
+    cerr << "Error: " << e.what() << endl;
+}
+
+
+// I originally had stage 4 working using an unordered map, because I assumed we could use any map
+// But I realized we had to use the TreeMap class we created. I tried to implement it but I couldn't get it to work
+
+
+//void createIndex(const vector<Student>& data, const string& field) {
+//    TreeMap<string, int> index;
+//
+//    for (const auto& student : data) {
+//        if (field == "Age") {
+//            string key = to_string(student.Age);
+//            if (index.containsKey(key)) {
+//                index.put(key, index.get(key) + 1);
+//            }
+//            else {
+//                index.put(key, 1);
+//            }
+//        }
+//        else if (field == "Graduated") {
+//            string key = student.Graduated;
+//            if (index.containsKey(key)) {
+//                index.put(key, index.get(key) + 1);
+//            }
+//            else {
+//                index.put(key, 1);
+//            }
+//        }
+//        else if (field == "GPA") {
+//            string key = to_string(student.GPA);
+//            if (index.containsKey(key)) {
+//                index.put(key, index.get(key) + 1);
+//            }
+//            else {
+//                index.put(key, 1);
+//            }
+//        }
+//        else if (field == "Name") {
+//            string key = student.Name;
+//            if (index.containsKey(key)) {
+//                index.put(key, index.get(key) + 1);
+//            }
+//            else {
+//                index.put(key, 1);
+//            }
+//        }
+//        else {
+//            cout << "Invalid field!" << endl;
+//            return;
+//        }
+//    }
+//
+//    cout << "\nIndex based on field: " << field << "\n";
+//    
+//    auto keys = index.keySet();  
+//
+//    for (const auto& key : keys) {
+//        cout << key << ": " << index.get(key) << " occurrence(s)\n";
+//    }
+//}
+//
+//
+//void viewSubset(const vector<Student>& data, const string& field, const string& value) {
+//    cout << "\nRecords where " << field << " is " << value << ":\n";
+//    bool found = false;
+//
+//    for (const auto& student : data) {
+//        if (field == "Age" && to_string(student.Age) == value) {
+//            cout << student.StudentID << "\t" << student.Name << "\t" << student.Age << "\t" << student.GPA << "\t" << student.Graduated << "\n";
+//            found = true;
+//        }
+//        else if (field == "Graduated" && student.Graduated == value) {
+//            cout << student.StudentID << "\t" << student.Name << "\t" << student.Age << "\t" << student.GPA << "\t" << student.Graduated << "\n";
+//            found = true;
+//        }
+//        else if (field == "GPA" && to_string(student.GPA) == value) {
+//            cout << student.StudentID << "\t" << student.Name << "\t" << student.Age << "\t" << student.GPA << "\t" << student.Graduated << "\n";
+//            found = true;
+//        }
+//        else if (field == "Name" && student.Name == value) {
+//            cout << student.StudentID << "\t" << student.Name << "\t" << student.Age << "\t" << student.GPA << "\t" << student.Graduated << "\n";
+//            found = true;
+//        }
+//    }
+//
+//    if (!found) {
+//        cout << "No records found for " << field << " = " << value << "\n";
+//    }
+//}
+//
+//
+//void app() try {
+//    vector<Student> students = loadCSV("./Student_Grades.csv");
+//
+//    while (true) {
+//        cout << "\nMenu:\n";
+//        cout << "1. Create index based on a field\n";
+//        cout << "2. View subset of data based on a field value\n";
+//        cout << "3. Exit\n";
+//        cout << "Enter your choice: ";
+//
+//        int choice;
+//        cin >> choice;
+//
+//        if (choice == 1) {
+//            cout << "Enter the field to index by (Age, Name, GPA, Graduated): ";
+//            string field;
+//            cin >> field;
+//            createIndex(students, field);
+//        }
+//        else if (choice == 2) {
+//            cout << "Enter the field to filter by (Age, Name, GPA, Graduated): ";
+//            string field;
+//            cin >> field;
+//            cout << "Enter the value to search for: ";
+//            string value;
+//            cin >> value;
+//            viewSubset(students, field, value);
+//        }
+//        else if (choice == 3) {
+//            cout << "Exiting the program.\n";
+//            break;
+//        }
+//        else {
+//            cout << "Invalid choice. Please try again.\n";
+//        }
+//    }
+//}
+//catch (const exception& e) {
+//    cerr << "Error: " << e.what() << endl;
+//}
