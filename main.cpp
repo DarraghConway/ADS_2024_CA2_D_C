@@ -15,7 +15,7 @@ int main() {
 
     //Run Stage 2:
     TreeMap<char, BinaryTree<string>> map;
-    processFile("C:/Users/darra/Desktop/word.txt", map);
+    processFile("./word.txt", map);
     displayMenu(map);
 
     return 0;
@@ -135,7 +135,7 @@ void displayMenu(TreeMap<char, BinaryTree<string>>& wordMap) {
             cout << "Letters in file:\n";
             for (char key = 'a'; key <= 'z'; ++key) {
                 if (wordMap.containsKey(key))
-                    wordMap[key].printInOrder();
+                    cout << key << endl;
             }
             break;
         }

@@ -1,0 +1,6 @@
+Word
+bird
+Dog
+chicken
+cat
+crocodile
