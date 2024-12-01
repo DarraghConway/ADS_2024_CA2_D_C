@@ -18,6 +18,7 @@ public:
     int size();
     bool removeKey(const K& key);
     V& operator[](const K& key);
+    void print();
 };
 
 template <class K, class V>
@@ -94,11 +95,14 @@ bool TreeMap<K, V>::removeKey(const K& key) {
     return tree.remove(entry); 
 }
 
-
 template <class K, class V>
 V& TreeMap<K, V>::operator[](const K& key) {
     if (!containsKey(key)) {
         throw logic_error("Key doesn't exist.");
     }
     return get(key);
+}
+template <class K, class V>
+void TreeMap<K, V>::print() {
+    tree.printInOrder();  
 }

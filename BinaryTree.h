@@ -1,7 +1,8 @@
 #pragma once
 #include "BSTNode.h"
-
 #include <vector>
+
+
 template <class T>
 class BinaryTree
 {
@@ -26,6 +27,10 @@ public:
 	void printPostOrder(BSTNode<T>* node);
 	T* toArray();
 	~BinaryTree();
+
+	bool operator<(const BinaryTree<T>& other) const;
+	bool operator>(const BinaryTree<T>& other) const;
+	bool operator==(const BinaryTree<T>& other) const;
 };
 
 template <class T>
@@ -236,10 +241,13 @@ void BinaryTree<T>::printInOrder()
 	this->printInOrder(root);
 	cout << endl;
 }
-template<class T>
-void BinaryTree<T>::printInOrder(BSTNode<T>* node)
-{
-
+template <class T>
+void BinaryTree<T>::printInOrder(BSTNode<T>* node) {
+    if (node != nullptr) {
+        printInOrder(node->getLeft());
+        cout << node->getItem() << " ";
+        printInOrder(node->getRight());
+    }
 }
 
 template<class T>
@@ -265,4 +273,58 @@ template<class T>
 void BinaryTree<T>::printPostOrder(BSTNode<T>* node)
 {
 
+}
+
+template <class T>
+bool BinaryTree<T>::operator<(const BinaryTree<T>& other) const {
+	if (root == nullptr && other.root == nullptr) {
+		return false;
+	}
+	if (root == nullptr) {
+		return true; 
+	}
+	if (other.root == nullptr) {
+		return false; 
+	}
+
+	if (root->getItem() < other.root->getItem()) {
+		return true; 
+	}
+	if (root->getItem() > other.root->getItem()) {
+		return false;
+	}
+
+	if (root->getLeft() != nullptr && other.root->getLeft() != nullptr) {
+		if (root->getLeft()->getItem() < other.root->getLeft()->getItem()) {
+			return true;
+		}
+	}
+	return root->getRight()->getItem() < other.root->getRight()->getItem();
+}
+
+template <class T>
+bool BinaryTree<T>::operator>(const BinaryTree<T>& other) const {
+	return other < *this; 
+}
+
+
+template <class T>
+bool BinaryTree<T>::operator==(const BinaryTree<T>& other) const {
+	if (root == nullptr && other.root == nullptr) {
+		return true; 
+	}
+	if (root == nullptr || other.root == nullptr) {
+		return false;
+	}
+
+	if (root->getItem() != other.root->getItem()) {
+		return false;
+	}
+
+	bool leftEqual = (root->getLeft() == nullptr && other.root->getLeft() == nullptr) ||
+		(*root->getLeft() == *other.root->getLeft());
+	bool rightEqual = (root->getRight() == nullptr && other.root->getRight() == nullptr) ||
+		(*root->getRight() == *other.root->getRight());
+
+	return leftEqual && rightEqual;
 }

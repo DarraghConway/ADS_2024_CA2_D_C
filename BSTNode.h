@@ -26,7 +26,7 @@ public:
 	void setRight(BSTNode<T>* r);
 	T& getItem();
 	~BSTNode();
-
+	bool operator==(const BSTNode<T>& other) const;
 };
 
 template <class T>
@@ -174,3 +174,16 @@ void BSTNode<T>::setItem(T item)
 	this->data = item;
 }
 
+template <class T>
+bool BSTNode<T>::operator==(const BSTNode<T>& other) const
+{
+	if (this->data != other.data)
+		return false;
+
+	bool leftEqual = (this->left == nullptr && other.left == nullptr) ||
+		(this->left != nullptr && *this->left == *other.left);
+	bool rightEqual = (this->right == nullptr && other.right == nullptr) ||
+		(this->right != nullptr && *this->right == *other.right);
+
+	return leftEqual && rightEqual;
+}
